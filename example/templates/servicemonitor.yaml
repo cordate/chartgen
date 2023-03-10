@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "example.fullname" . }}-exporter
+  namespace: brolly
+  labels:
+    {{- include "example.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - port: 8000
+      interval: 30s
+      scheme: https
+      path: /metrics
+      # 按照规则改写改写label对应的值，按照顺序执行多个label对应值的修改
+      metricRelabelings:
+      - action: labeldrop
+        regex: ^cluster$ # 删除对应的label，不进行采集
+      # 指标label本身的重命名，按照顺序执行多个relabel规则
+      relabelings:
+      - action: replace
+        sourceLabels:
+        - __meta__metric
+        targetLabel: app
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels:
+      {{- include "example.selectorLabels" . | nindent 6 }}

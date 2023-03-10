@@ -1,0 +1,25 @@
+replicaCount: 1
+image:
+  repository: hub.com
+  pullPolicy: IfNotPresen
+nameOverride: ""
+fullnameOverride: ""
+podSecurityContext: {}
+securityContext: {}
+ports:
+  - name: http
+    containerPort: 3000
+    protocol: TCP
+service:
+  type: ClusterIp
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http
+resources: {}
+nodeSelector: {}
+affinity: {}
+env:
+  Name: "78"
+tolerations: []

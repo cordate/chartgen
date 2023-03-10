@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-env-secret
+  namespace: {{ .Release.namespace }}
+  labels:
+    {{- include "example.labels" . | nindent 4 }}
+data:
+  {{- range name, value := .Values.configmap.data }}
+  {{ $name }}: {{ $value | quote }}
+  {{- end }}
